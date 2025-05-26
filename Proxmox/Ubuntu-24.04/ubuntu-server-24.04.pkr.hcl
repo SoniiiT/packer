@@ -59,7 +59,7 @@ source "proxmox-iso" "ubuntu-server-24-04-02" {
     sockets = "1"
 
     # VM CPU Settings
-    cores = "2"
+    cores = "1"
     
     # VM Memory Settings
     memory = "2048" 
