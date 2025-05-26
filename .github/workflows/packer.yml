@@ -33,7 +33,7 @@ jobs:
       - name: Set Build Matrix
         id: set-matrix
         run: |
-          echo "matrix={\"template\":$(cat $GITHUB_OUTPUT | grep dirs | cut -d= -f2)}" >> "$GITHUB_OUTPUT"
+          echo "matrix={\"template\":$(echo '${{ steps.find-dirs.outputs.dirs }}' | jq -c .)}" >> "$GITHUB_OUTPUT"
 
       - name: Validate Templates
         env:
