@@ -23,9 +23,6 @@ jobs:
         with:
           version: "latest"
 
-      - name: Initialize Packer
-        run: packer init .
-        
       - name: Find Template Directories
         id: find-dirs
         run: |
@@ -42,7 +39,10 @@ jobs:
         run: |
           for dir in $(echo '${{ steps.find-dirs.outputs.dirs }}' | jq -r '.[]'); do
             echo "Validating template in Proxmox/$dir"
-            packer validate "./Proxmox/$dir"
+            cd "Proxmox/$dir"
+            packer init .
+            packer validate .
+            cd ../..
           done
 
   build:
@@ -78,4 +78,7 @@ jobs:
           PKR_VAR_proxmox_password: ${{ secrets.PROXMOX_PASSWORD }}
         run: |
           echo "Building template in Proxmox/${{ matrix.template }}"
-          packer build "./Proxmox/${{ matrix.template }}" 
+          cd "Proxmox/${{ matrix.template }}"
+          packer init .
+          packer build .
+          cd ../.. 
