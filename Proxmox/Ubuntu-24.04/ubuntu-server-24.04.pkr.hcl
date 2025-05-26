@@ -89,10 +89,10 @@ source "proxmox-iso" "ubuntu-server-24-04-02" {
 
     # PACKER Autoinstall Settings
     http_directory = "./http" 
-    # (Optional) Bind IP Address and Port
-    http_bind_address = "192.168.178.254"
-    http_port_min = 8802
-    http_port_max = 8802
+    # HTTP Bind settings werden von Packer automatisch verwaltet
+    # http_bind_address = "192.168.178.254"
+    # http_port_min = 8802
+    # http_port_max = 8802
 
     ssh_username = "soniiit"
 
