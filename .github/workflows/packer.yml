@@ -10,8 +10,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  discover-and-validate:
-    runs-on: ubuntu-latest
+  validate:
+    runs-on: self-hosted
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
@@ -46,10 +46,10 @@ jobs:
           done
 
   build:
-    needs: discover-and-validate
-    runs-on: ubuntu-latest
+    needs: validate
+    runs-on: self-hosted
     strategy:
-      matrix: ${{fromJson(needs.discover-and-validate.outputs.matrix)}}
+      matrix: ${{fromJson(needs.validate.outputs.matrix)}}
       fail-fast: false
     
     if: github.event_name == 'push'
