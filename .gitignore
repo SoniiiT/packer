@@ -1,0 +1,18 @@
+ # Packer
+*.pkrvars.hcl
+credentials.pkr.hcl
+packer_cache/
+output-*/
+
+# Logs
+*.log
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo

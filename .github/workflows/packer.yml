@@ -1,0 +1,81 @@
+name: Packer Build
+
+on:
+  push:
+    paths:
+      - 'Proxmox/**'
+  pull_request:
+    paths:
+      - 'Proxmox/**'
+  workflow_dispatch:
+
+jobs:
+  discover-and-validate:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Packer
+        uses: hashicorp/setup-packer@main
+        with:
+          version: "latest"
+
+      - name: Initialize Packer
+        run: packer init .
+
+      - name: Find Template Directories
+        id: find-dirs
+        run: |
+          DIRS=$(find Proxmox/* -type d -maxdepth 0 -print0 | xargs -0 -I {} basename {} | jq -R . | jq -s .)
+          echo "Found directories: $DIRS"
+          echo "dirs=$DIRS" >> $GITHUB_OUTPUT
+
+      - name: Set Build Matrix
+        id: set-matrix
+        run: |
+          echo "matrix=$(echo '{"template":' $(cat $GITHUB_OUTPUT | grep dirs | cut -d= -f2) '}')" >> $GITHUB_OUTPUT
+
+      - name: Validate Templates
+        run: |
+          for dir in $(echo '${{ steps.find-dirs.outputs.dirs }}' | jq -r '.[]'); do
+            echo "Validating template in Proxmox/$dir"
+            packer validate "./Proxmox/$dir"
+          done
+
+  build:
+    needs: discover-and-validate
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: ${{fromJson(needs.discover-and-validate.outputs.matrix)}}
+      fail-fast: false
+    
+    if: github.event_name == 'push'
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Packer
+        uses: hashicorp/setup-packer@main
+        with:
+          version: "latest"
+
+      - name: Check if Directory Changed
+        id: changed
+        run: |
+          git fetch origin ${{ github.event.before }}
+          CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep "^Proxmox/${{ matrix.template }}/")
+          if [ ! -z "$CHANGED" ]; then
+            echo "Directory has changed, will build"
+            echo "should_build=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Build Template
+        if: steps.changed.outputs.should_build == 'true'
+        env:
+          PKR_VAR_proxmox_password: ${{ secrets.PROXMOX_PASSWORD }}
+        run: |
+          echo "Building template in Proxmox/${{ matrix.template }}"
+          packer build "./Proxmox/${{ matrix.template }}" 
