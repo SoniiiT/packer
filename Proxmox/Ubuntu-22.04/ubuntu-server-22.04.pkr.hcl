@@ -42,14 +42,13 @@ source "proxmox-iso" "ubuntu-server-22-04-05" {
     template_description = "Ubuntu Server jammy Image"
 
     # VM OS Settings
-    # (Option 1) Local ISO File
-    # iso_file = "local:iso/ubuntu-22.04-live-server-amd64.iso"
-    # - or -
-    # (Option 2) Download ISO
-    iso_url = "https://releases.ubuntu.com/22.04/ubuntu-22.04.5-live-server-amd64.iso"
-    iso_checksum = "9bc6028870aef3f74f4e16b900008179e78b130e6b0b9a140635434a46aa98b0"
-    iso_storage_pool = "local"
-    unmount_iso = true
+    # ISO Boot Settings
+    boot_iso {
+        iso_url = "https://releases.ubuntu.com/22.04/ubuntu-22.04.5-live-server-amd64.iso"
+        iso_checksum = "9bc6028870aef3f74f4e16b900008179e78b130e6b0b9a140635434a46aa98b0"
+        iso_storage_pool = "local"
+        unmount = true
+    }
 
     # VM System Settings
     qemu_agent = true

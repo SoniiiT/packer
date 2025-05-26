@@ -42,14 +42,13 @@ source "proxmox-iso" "ubuntu-server-24-04-02" {
     template_description = "Ubuntu Server Noble Image"
 
     # VM OS Settings
-    # (Option 1) Local ISO File
-    # iso_file = "local:iso/ubuntu-22.04-live-server-amd64.iso"
-    # - or -
-    # (Option 2) Download ISO
-    iso_url = "https://releases.ubuntu.com/24.04.2/ubuntu-24.04.2-live-server-amd64.iso"
-    iso_checksum = "d6dab0c3a657988501b4bd76f1297c053df710e06e0c3aece60dead24f270b4d"
-    iso_storage_pool = "local"
-    unmount_iso = true
+    # ISO Boot Settings
+    boot_iso {
+        iso_url = "https://releases.ubuntu.com/24.04.2/ubuntu-24.04.2-live-server-amd64.iso"
+        iso_checksum = "d6dab0c3a657988501b4bd76f1297c053df710e06e0c3aece60dead24f270b4d"
+        iso_storage_pool = "local"
+        unmount = true
+    }
 
     # VM System Settings
     qemu_agent = true
