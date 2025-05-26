@@ -36,6 +36,10 @@ jobs:
           echo "matrix={\"template\":$(cat $GITHUB_OUTPUT | grep dirs | cut -d= -f2)}" >> "$GITHUB_OUTPUT"
 
       - name: Validate Templates
+        env:
+          PKR_VAR_proxmox_api_url: ${{ secrets.PROXMOX_API_URL }}
+          PKR_VAR_proxmox_api_token_id: ${{ secrets.PROXMOX_API_TOKEN_ID }}
+          PKR_VAR_proxmox_api_token_secret: ${{ secrets.PROXMOX_API_TOKEN_SECRET }}
         run: |
           for dir in $(echo '${{ steps.find-dirs.outputs.dirs }}' | jq -r '.[]'); do
             echo "Validating template in Proxmox/$dir"
@@ -75,7 +79,9 @@ jobs:
       - name: Build Template
         if: steps.changed.outputs.should_build == 'true'
         env:
-          PKR_VAR_proxmox_password: ${{ secrets.PROXMOX_PASSWORD }}
+          PKR_VAR_proxmox_api_url: ${{ secrets.PROXMOX_API_URL }}
+          PKR_VAR_proxmox_api_token_id: ${{ secrets.PROXMOX_API_TOKEN_ID }}
+          PKR_VAR_proxmox_api_token_secret: ${{ secrets.PROXMOX_API_TOKEN_SECRET }}
         run: |
           echo "Building template in Proxmox/${{ matrix.template }}"
           cd "Proxmox/${{ matrix.template }}"

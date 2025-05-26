@@ -2,6 +2,15 @@
 # ---
 # Packer Template to create an Ubuntu Server (jammy) on Proxmox
 
+packer {
+  required_plugins {
+    proxmox = {
+      version = ">= 1.1.3"
+      source  = "github.com/hashicorp/proxmox"
+    }
+  }
+}
+
 # Variable Definitions
 variable "proxmox_api_url" {
     type = string
