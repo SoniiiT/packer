@@ -12,14 +12,16 @@ on:
 jobs:
   validate:
     runs-on: self-hosted
-    container:
-      image: hashicorp/packer:latest
-      options: --net=host
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+
+      - name: Setup Packer
+        uses: hashicorp/setup-packer@main
+        with:
+          version: "latest"
 
       - name: Initialize Packer
         run: packer init .
@@ -46,9 +48,6 @@ jobs:
   build:
     needs: validate
     runs-on: self-hosted
-    container:
-      image: hashicorp/packer:latest
-      options: --net=host
     strategy:
       matrix: ${{fromJson(needs.validate.outputs.matrix)}}
       fail-fast: false
@@ -57,6 +56,11 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+
+      - name: Setup Packer
+        uses: hashicorp/setup-packer@main
+        with:
+          version: "latest"
 
       - name: Check if Directory Changed
         id: changed
