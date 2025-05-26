@@ -26,14 +26,14 @@ jobs:
       - name: Find Template Directories
         id: find-dirs
         run: |
-          DIRS=$(find Proxmox/* -type d -maxdepth 0 -print0 | xargs -0 -I {} basename {} | jq -R . | jq -s .)
+          DIRS=$(find Proxmox/* -type d -maxdepth 0 -print0 | xargs -0 -I {} basename {} | jq -R . | jq -sc .)
           echo "Found directories: $DIRS"
-          echo "dirs=$DIRS" >> $GITHUB_OUTPUT
+          echo "dirs=$DIRS" >> "$GITHUB_OUTPUT"
 
       - name: Set Build Matrix
         id: set-matrix
         run: |
-          echo "matrix=$(echo '{"template":' $(cat $GITHUB_OUTPUT | grep dirs | cut -d= -f2) '}')" >> $GITHUB_OUTPUT
+          echo "matrix={\"template\":$(cat $GITHUB_OUTPUT | grep dirs | cut -d= -f2)}" >> "$GITHUB_OUTPUT"
 
       - name: Validate Templates
         run: |
