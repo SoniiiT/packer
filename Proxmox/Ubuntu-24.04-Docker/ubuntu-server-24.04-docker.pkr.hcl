@@ -37,7 +37,7 @@ source "proxmox-iso" "ubuntu-server-24-04-02-docker" {
     
     # VM General Settings
     node = "pve-srv-01"
-    vm_id = "900"
+    vm_id = "901"
     vm_name = "ubuntu-server-24-04-02-docker"
     template_description = "Ubuntu Server Noble Image"
 
