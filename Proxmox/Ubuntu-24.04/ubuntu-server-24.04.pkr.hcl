@@ -111,7 +111,7 @@ source "proxmox-iso" "ubuntu-server-24-04-02" {
     ssh_private_key_file = "/home/github-runner/.ssh/id_rsa"
 
     # Raise the timeout, when installation takes longer
-    ssh_timeout = "20m"
+    ssh_timeout = "60m"
 }
 
 # Build Definition to create the VM Template
