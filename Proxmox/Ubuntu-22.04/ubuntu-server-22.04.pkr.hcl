@@ -2,6 +2,15 @@
 # ---
 # Packer Template to create an Ubuntu Server (jammy) on Proxmox
 
+packer {
+  required_plugins {
+    proxmox = {
+      version = ">= 1.1.3"
+      source  = "github.com/hashicorp/proxmox"
+    }
+  }
+}
+
 # Variable Definitions
 variable "proxmox_api_url" {
     type = string
@@ -59,7 +68,7 @@ source "proxmox-iso" "ubuntu-server-22-04-05" {
     sockets = "1"
 
     # VM CPU Settings
-    cores = "2"
+    cores = "1"
     
     # VM Memory Settings
     memory = "2048" 
@@ -89,10 +98,10 @@ source "proxmox-iso" "ubuntu-server-22-04-05" {
 
     # PACKER Autoinstall Settings
     http_directory = "./http" 
-    # (Optional) Bind IP Address and Port
-    http_bind_address = "192.168.178.254"
-    http_port_min = 8802
-    http_port_max = 8802
+    # HTTP Bind settings werden von Packer automatisch verwaltet
+    # http_bind_address = "192.168.178.254"
+    # http_port_min = 8802
+    # http_port_max = 8802
 
     ssh_username = "soniiit"
 
@@ -100,7 +109,7 @@ source "proxmox-iso" "ubuntu-server-22-04-05" {
     # ssh_password = ""
     # - or -
     # (Option 2) Add your Private SSH KEY file here
-    ssh_private_key_file = "C:/ssh/id_rsa"
+    ssh_private_key_file = "/home/github-runner/.ssh/id_rsa"
 
     # Raise the timeout, when installation takes longer
     ssh_timeout = "20m"
