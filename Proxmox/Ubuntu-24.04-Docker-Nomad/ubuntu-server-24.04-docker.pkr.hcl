@@ -181,7 +181,8 @@ build {
             "sudo systemctl enable docker",
             "sudo systemctl start docker",
             "sudo systemctl enable nomad",
-            "sudo systemctl start nomad"
+            "sudo systemctl stop nomad",
+            "sudo rm -rf /opt/nomad/*"
         ]
     }
 }
