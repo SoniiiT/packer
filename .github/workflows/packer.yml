@@ -95,4 +95,8 @@ jobs:
       - name: Skip Build
         if: steps.changed.outputs.should_build == 'false'
         run: |
-          echo "No changes detected in Proxmox/${{ matrix.template }}, skipping build" 
+          echo "No changes detected in Proxmox/${{ matrix.template }}, skipping build"
+
+      - name: Mark job as success if skipped
+        if: steps.changed.outputs.should_build == 'false'
+        run: exit 0 
