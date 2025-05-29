@@ -1,0 +1,13 @@
+#cloud-config
+write_files:
+  - path: /etc/k3s-config.env
+    content: |
+      KUBERNETES_SERVER_URL=${kubernetes_server_url}
+      K3S_TOKEN=${k3s_token}
+    permissions: '0644'
+
+runcmd:
+  - |
+    sed -i "s|__KUBERNETES_SERVER_URL__|$(cat /etc/k3s-config.env | grep KUBERNETES_SERVER_URL | cut -d'=' -f2)|g" /opt/k3s-setup/install-k3s-agent.sh
+    sed -i "s|__K3S_TOKEN__|$(cat /etc/k3s-config.env | grep K3S_TOKEN | cut -d'=' -f2)|g" /opt/k3s-setup/install-k3s-agent.sh
+    /opt/k3s-setup/install-k3s-agent.sh 
