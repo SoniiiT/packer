@@ -26,7 +26,7 @@ variable "proxmox_api_token_secret" {
 }
 
 # Resource Definition for the VM Template
-source "proxmox-iso" "ubuntu-server-24-04-02" {
+source "proxmox-iso" "ubuntu-server-24-04-02-k3s-prod01-server" {
     # Proxmox Connection Settings
     proxmox_url = "${var.proxmox_api_url}"
     username = "${var.proxmox_api_token_id}"
@@ -36,9 +36,9 @@ source "proxmox-iso" "ubuntu-server-24-04-02" {
     
     # VM General Settings
     node = "pve-srv-01"
-    vm_id = "904"
-    vm_name = "ubuntu-server-24-04-02"
-    template_description = "Ubuntu Server Noble Image with K3s Agent pre-installed"
+    vm_id = "903"
+    vm_name = "ubuntu-server-24-04-02-k3s-prod01-server"
+    template_description = "Ubuntu Server Noble Image with K3s Server pre-installed"
 
     # VM OS Settings
     # ISO Boot Settings
@@ -112,8 +112,8 @@ source "proxmox-iso" "ubuntu-server-24-04-02" {
 
 # Build Definition to create the VM Template
 build {
-    name = "ubuntu-server-24-04-02"
-    sources = ["source.proxmox-iso.ubuntu-server-24-04-02"]
+    name = "ubuntu-server-24-04-02-k3s-prod01-server"
+    sources = ["source.proxmox-iso.ubuntu-server-24-04-02-k3s-prod01-server"]
 
     # Provisioning the VM Template for Cloud-Init Integration in Proxmox #1
     provisioner "shell" {
@@ -159,10 +159,10 @@ build {
         ]
     }
 
-    # Install K3s Agent Binary and Dependencies
+    # Install K3s Server
     provisioner "shell" {
         inline = [
-            "curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC=\"agent\" K3S_URL=\"https://192.168.178.10:6443\" K3S_TOKEN=\"K10c260dfb82c460db11012a9267f3e248551a91a53effa63300e626bd4255407d2::server:bbc6f48b897fbeb0ebdfa21c2d6755d8\" sh -"
+            "curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC=\"server\" INSTALL_K3S_CHANNEL=latest sh -s - --disable=servicelb --disable=traefik --disable=local-storage --kube-controller-manager-arg bind-address=0.0.0.0 --kube-proxy-arg metrics-bind-address=0.0.0.0 --kube-scheduler-arg bind-address=0.0.0.0 --etcd-expose-metrics true --kubelet-arg containerd=/run/k3s/containerd/containerd.sock"
         ]
     }
 
