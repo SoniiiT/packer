@@ -62,10 +62,6 @@ source "proxmox-iso" "ubuntu-server-24-04-02-k3s-prod01-agent" {
     ]
     boot = "c"
 
-    # Ensure proper shutdown after installation
-    shutdown_command = "echo 'packer' | sudo -S shutdown -P now"
-    shutdown_timeout = "5m"
-
     # VM System Settings
     qemu_agent = true
 
@@ -78,8 +74,6 @@ source "proxmox-iso" "ubuntu-server-24-04-02-k3s-prod01-agent" {
         format = "raw"
         storage_pool = "M2-Storage"
         type = "virtio"
-        # Ensure this is the first disk (vda)
-        disk_id = 0
     }
 
     # Secondary Disk for Kubernetes Data (128GB)
@@ -88,8 +82,6 @@ source "proxmox-iso" "ubuntu-server-24-04-02-k3s-prod01-agent" {
         format = "raw"
         storage_pool = "HDD-Storage"
         type = "virtio"
-        # Ensure this is the second disk (vdb)
-        disk_id = 1
     }
 
     # VM Socket Settings
