@@ -1,6 +1,6 @@
-# Ubuntu Server noble
+# Ubuntu Server jammy
 # ---
-# Packer Template to create an Ubuntu Server (noble) on Proxmox
+# Packer Template to create an Ubuntu Server (jammy) on Proxmox
 # ---
 
 packer {
@@ -37,7 +37,7 @@ source "proxmox-iso" "ubuntu-server-24-04-02-k3s-prod01-agent" {
     
     # VM General Settings
     node = "pve-srv-01"
-    vm_id = "904"
+    vm_id = "903"
     vm_name = "ubuntu-server-24-04-02-k3s-prod01-agent"
     template_description = "Ubuntu Server Noble Image with K3s Agent pre-installed"
 
@@ -50,25 +50,47 @@ source "proxmox-iso" "ubuntu-server-24-04-02-k3s-prod01-agent" {
         unmount = true
     }
 
+    # Boot Order Settings
+    boot_wait = "5s"
+    boot_command = [
+        "<esc><wait>",
+        "e<wait>",
+        "<down><down><down><end>",
+        "<bs><bs><bs><bs><wait>",
+        "autoinstall ds=nocloud-net\\;s=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ ---<wait>",
+        "<f10><wait>"
+    ]
+    boot = "c"
+    boot_wait = "5s"
+
+    # Ensure proper shutdown after installation
+    shutdown_command = "echo 'packer' | sudo -S shutdown -P now"
+    shutdown_timeout = "5m"
+
     # VM System Settings
     qemu_agent = true
 
     # VM Hard Disk Settings
     scsi_controller = "virtio-scsi-pci"
 
+    # Primary Disk for Ubuntu Installation (32GB)
     disks {
         disk_size = "32G"
         format = "raw"
         storage_pool = "M2-Storage"
         type = "virtio"
+        # Ensure this is the first disk (vda)
+        disk_id = 0
     }
 
-    # Second Disk for Kubernetes Data
+    # Secondary Disk for Kubernetes Data (128GB)
     disks {
         disk_size = "128G"
         format = "raw"
         storage_pool = "HDD-Storage"
         type = "virtio"
+        # Ensure this is the second disk (vdb)
+        disk_id = 1
     }
 
     # VM Socket Settings
@@ -90,18 +112,6 @@ source "proxmox-iso" "ubuntu-server-24-04-02-k3s-prod01-agent" {
     # VM Cloud-Init Settings
     cloud_init = true
     cloud_init_storage_pool = "M2-Storage"
-
-    # PACKER Boot Commands
-    boot_command = [
-        "<esc><wait>",
-        "e<wait>",
-        "<down><down><down><end>",
-        "<bs><bs><bs><bs><wait>",
-        "autoinstall ds=nocloud-net\\;s=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ ---<wait>",
-        "<f10><wait>"
-    ]
-    boot = "c"
-    boot_wait = "5s"
 
     # PACKER Autoinstall Settings
     http_directory = "./http"
@@ -160,7 +170,7 @@ build {
         ]
     }
 
-    # Install K3s Agent Binary and Dependencies
+    # Install K3s Agent
     provisioner "shell" {
         inline = [
             "curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC=\"agent\" K3S_URL=\"https://192.168.178.10:6443\" K3S_TOKEN=\"K10c260dfb82c460db11012a9267f3e248551a91a53effa63300e626bd4255407d2::server:bbc6f48b897fbeb0ebdfa21c2d6755d8\" sh -"

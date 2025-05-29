@@ -1,6 +1,6 @@
-# Ubuntu Server noble
+# Ubuntu Server jammy
 # ---
-# Packer Template to create an Ubuntu Server (noble) on Proxmox
+# Packer Template to create an Ubuntu Server (jammy) on Proxmox
 # ---
 
 packer {
@@ -37,7 +37,7 @@ source "proxmox-iso" "ubuntu-server-24-04-02-k3s-prod01-server" {
     
     # VM General Settings
     node = "pve-srv-01"
-    vm_id = "903"
+    vm_id = "902"
     vm_name = "ubuntu-server-24-04-02-k3s-prod01-server"
     template_description = "Ubuntu Server Noble Image with K3s Server pre-installed"
 
@@ -50,35 +50,57 @@ source "proxmox-iso" "ubuntu-server-24-04-02-k3s-prod01-server" {
         unmount = true
     }
 
+    # Boot Order Settings
+    boot_wait = "5s"
+    boot_command = [
+        "<esc><wait>",
+        "e<wait>",
+        "<down><down><down><end>",
+        "<bs><bs><bs><bs><wait>",
+        "autoinstall ds=nocloud-net\\;s=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ ---<wait>",
+        "<f10><wait>"
+    ]
+    boot = "c"
+    boot_wait = "5s"
+
+    # Ensure proper shutdown after installation
+    shutdown_command = "echo 'packer' | sudo -S shutdown -P now"
+    shutdown_timeout = "5m"
+
     # VM System Settings
     qemu_agent = true
 
     # VM Hard Disk Settings
     scsi_controller = "virtio-scsi-pci"
 
+    # Primary Disk for Ubuntu Installation (32GB)
     disks {
         disk_size = "32G"
         format = "raw"
         storage_pool = "M2-Storage"
         type = "virtio"
+        # Ensure this is the first disk (vda)
+        disk_id = 0
     }
 
-    # Second Disk for Kubernetes Data
+    # Secondary Disk for Kubernetes Data (128GB)
     disks {
         disk_size = "128G"
         format = "raw"
         storage_pool = "HDD-Storage"
         type = "virtio"
+        # Ensure this is the second disk (vdb)
+        disk_id = 1
     }
 
     # VM Socket Settings
     sockets = "1"
 
     # VM CPU Settings
-    cores = "1"
+    cores = "2"
     
     # VM Memory Settings
-    memory = "2048" 
+    memory = "4096" 
 
     # VM Network Settings
     network_adapters {
@@ -90,18 +112,6 @@ source "proxmox-iso" "ubuntu-server-24-04-02-k3s-prod01-server" {
     # VM Cloud-Init Settings
     cloud_init = true
     cloud_init_storage_pool = "M2-Storage"
-
-    # PACKER Boot Commands
-    boot_command = [
-        "<esc><wait>",
-        "e<wait>",
-        "<down><down><down><end>",
-        "<bs><bs><bs><bs><wait>",
-        "autoinstall ds=nocloud-net\\;s=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ ---<wait>",
-        "<f10><wait>"
-    ]
-    boot = "c"
-    boot_wait = "5s"
 
     # PACKER Autoinstall Settings
     http_directory = "./http"
