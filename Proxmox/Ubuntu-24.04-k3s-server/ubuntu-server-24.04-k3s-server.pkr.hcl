@@ -36,7 +36,7 @@ source "proxmox-iso" "ubuntu-server-24-04-02" {
     
     # VM General Settings
     node = "pve-srv-01"
-    vm_id = "900"
+    vm_id = "903"
     vm_name = "ubuntu-server-24-04-02"
     template_description = "Ubuntu Server Noble Image with K3s Server pre-installed"
 

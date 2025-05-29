@@ -74,6 +74,9 @@ jobs:
           if [ ! -z "$CHANGED" ]; then
             echo "Directory has changed, will build"
             echo "should_build=true" >> $GITHUB_OUTPUT
+          else
+            echo "No changes in directory, skipping build"
+            echo "should_build=false" >> $GITHUB_OUTPUT
           fi
 
       - name: Build Template
@@ -87,4 +90,9 @@ jobs:
           cd "Proxmox/${{ matrix.template }}"
           packer init .
           packer build .
-          cd ../.. 
+          cd ../..
+
+      - name: Skip Build
+        if: steps.changed.outputs.should_build == 'false'
+        run: |
+          echo "No changes detected in Proxmox/${{ matrix.template }}, skipping build" 
