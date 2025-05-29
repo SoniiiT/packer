@@ -1,6 +1,7 @@
 # Ubuntu Server noble
 # ---
 # Packer Template to create an Ubuntu Server (noble) on Proxmox
+# ---
 
 packer {
   required_plugins {
