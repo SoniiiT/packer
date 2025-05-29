@@ -1,6 +1,6 @@
-# Ubuntu Server jammy
+# Ubuntu Server noble
 # ---
-# Packer Template to create an Ubuntu Server (jammy) on Proxmox
+# Packer Template to create an Ubuntu Server (noble) on Proxmox
 
 packer {
   required_plugins {
