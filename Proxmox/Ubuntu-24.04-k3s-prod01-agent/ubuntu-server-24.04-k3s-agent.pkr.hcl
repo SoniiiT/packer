@@ -61,7 +61,6 @@ source "proxmox-iso" "ubuntu-server-24-04-02-k3s-prod01-agent" {
         "<f10><wait>"
     ]
     boot = "c"
-    boot_wait = "5s"
 
     # Ensure proper shutdown after installation
     shutdown_command = "echo 'packer' | sudo -S shutdown -P now"
