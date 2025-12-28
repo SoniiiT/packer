@@ -70,6 +70,8 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Packer
         uses: hashicorp/setup-packer@main
@@ -79,14 +81,17 @@ jobs:
       - name: Check if Directory Changed
         id: changed
         run: |
-          git fetch origin ${{ github.event.before }}
-          CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep "^Proxmox/${{ matrix.template }}/")
-          if [ ! -z "$CHANGED" ]; then
-            echo "Directory has changed, will build"
-            echo "should_build=true" >> $GITHUB_OUTPUT
+          if [ "${{ github.event_name }}" == "push" ]; then
+            if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q "^Proxmox/${{ matrix.template }}/"; then
+              echo "Directory has changed, will build"
+              echo "should_build=true" >> $GITHUB_OUTPUT
+            else
+              echo "No changes in directory, skipping build"
+              echo "should_build=false" >> $GITHUB_OUTPUT
+            fi
           else
-            echo "No changes in directory, skipping build"
-            echo "should_build=false" >> $GITHUB_OUTPUT
+            # Manual run or other - build everything
+            echo "should_build=true" >> $GITHUB_OUTPUT
           fi
 
       - name: Create SSH Key
