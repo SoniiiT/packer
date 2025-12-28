@@ -1,4 +1,4 @@
-# Windows Server 2022 Datacenter
+# Windows Server 2022
 # ---
 # Packer Template to create a Windows Server 2022 Datacenter on Proxmox
 
