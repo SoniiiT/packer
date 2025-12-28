@@ -25,6 +25,11 @@ variable "proxmox_api_token_secret" {
     sensitive = true
 }
 
+variable "ssh_private_key_file" {
+    type = string
+    default = "/home/github-runner/.ssh/id_rsa"
+}
+
 # Resource Definiation for the VM Template
 source "proxmox-iso" "ubuntu-server-24-04-02" {
 
@@ -108,7 +113,7 @@ source "proxmox-iso" "ubuntu-server-24-04-02" {
     # ssh_password = ""
     # - or -
     # (Option 2) Add your Private SSH KEY file here
-    ssh_private_key_file = "/home/github-runner/.ssh/id_rsa"
+    ssh_private_key_file = "${var.ssh_private_key_file}"
 
     # Raise the timeout, when installation takes longer
     ssh_timeout = "60m"
