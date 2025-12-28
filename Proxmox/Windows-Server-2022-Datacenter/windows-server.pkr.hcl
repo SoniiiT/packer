@@ -83,7 +83,8 @@ source "proxmox-iso" "windows-server" {
     template_description = "Windows Server 2022 Template"
     
     # VM OS Settings
-    os = "win11" # Use win11 or win10 for best defaults in Proxmox for Server 2022
+    os = "win11"
+    machine = "q35"
     
     # ISO Boot Settings (Windows Installer)
     boot_iso {
