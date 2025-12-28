@@ -173,7 +173,8 @@ build {
     provisioner "powershell" {
         inline = [
             "Write-Host 'Running Sysprep...'",
-            "& $env:SystemRoot\\System32\\Sysprep\\Sysprep.exe /oobe /generalize /shutdown /quiet"
+            "& $env:SystemRoot\\System32\\Sysprep\\Sysprep.exe /oobe /generalize /quit /quiet",
+            "Write-Host 'Sysprep complete. Packer will now shut down the VM.'"
         ]
     }
 }
