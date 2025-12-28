@@ -14,9 +14,12 @@ jobs:
     runs-on: self-hosted
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
+      run_build: ${{ steps.set-matrix.outputs.run_build }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Packer
         uses: hashicorp/setup-packer@main
@@ -33,7 +36,52 @@ jobs:
       - name: Set Build Matrix
         id: set-matrix
         run: |
-          echo "matrix={\"template\":$(echo '${{ steps.find-dirs.outputs.dirs }}' | jq -c .)}" >> "$GITHUB_OUTPUT"
+          ALL_DIRS='${{ steps.find-dirs.outputs.dirs }}'
+          
+          echo "Event: ${{ github.event_name }}"
+          
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            git fetch origin ${{ github.base_ref }}
+            CHANGES=$(git diff --name-only origin/${{ github.base_ref }} HEAD)
+          elif [ "${{ github.event_name }}" == "push" ]; then
+            if [ "${{ github.event.before }}" == "0000000000000000000000000000000000000000" ]; then
+               git fetch origin main
+               CHANGES=$(git diff --name-only origin/main HEAD)
+            else
+               CHANGES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
+            fi
+          else
+            CHANGES="ALL"
+          fi
+          
+          echo "Changed files:"
+          echo "$CHANGES"
+
+          if [ "$CHANGES" == "ALL" ]; then
+            MATRIX=$ALL_DIRS
+          else
+            BUILD_LIST=()
+            for dir in $(echo $ALL_DIRS | jq -r '.[]'); do
+              if echo "$CHANGES" | grep -q "^Proxmox/$dir/"; then
+                BUILD_LIST+=("$dir")
+              fi
+            done
+            
+            if [ ${#BUILD_LIST[@]} -eq 0 ]; then
+              MATRIX="[]"
+            else
+              MATRIX=$(printf '%s\n' "${BUILD_LIST[@]}" | jq -R . | jq -sc .)
+            fi
+          fi
+          
+          echo "Calculated matrix: $MATRIX"
+          echo "matrix={\"template\":$MATRIX}" >> "$GITHUB_OUTPUT"
+          
+          if [ "$MATRIX" == "[]" ]; then
+            echo "run_build=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "run_build=true" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Create SSH Key
         run: |
@@ -61,63 +109,27 @@ jobs:
 
   build:
     needs: validate
+    if: needs.validate.outputs.run_build == 'true'
     runs-on: self-hosted
     strategy:
       matrix: ${{fromJson(needs.validate.outputs.matrix)}}
       fail-fast: false
     
-    if: github.event_name == 'push'
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Setup Packer
         uses: hashicorp/setup-packer@main
         with:
           version: "latest"
 
-      - name: Check if Directory Changed
-        id: changed
-        run: |
-          echo "Event: ${{ github.event_name }}"
-          
-          if [ "${{ github.event_name }}" == "pull_request" ]; then
-            git fetch origin ${{ github.base_ref }}
-            CHANGES=$(git diff --name-only origin/${{ github.base_ref }} HEAD)
-          elif [ "${{ github.event_name }}" == "push" ]; then
-            if [ "${{ github.event.before }}" == "0000000000000000000000000000000000000000" ]; then
-               # New branch push, compare against main
-               git fetch origin main
-               CHANGES=$(git diff --name-only origin/main HEAD)
-            else
-               CHANGES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
-            fi
-          else
-            # Manual run or other - build everything
-            CHANGES="Proxmox/${{ matrix.template }}/force_build"
-          fi
-          
-          echo "Changed files:"
-          echo "$CHANGES"
-
-          if echo "$CHANGES" | grep -q "^Proxmox/${{ matrix.template }}/"; then
-            echo "Directory has changed, will build"
-            echo "should_build=true" >> $GITHUB_OUTPUT
-          else
-            echo "No changes in directory, skipping build"
-            echo "should_build=false" >> $GITHUB_OUTPUT
-          fi
-
       - name: Create SSH Key
-        if: steps.changed.outputs.should_build == 'true'
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key.pem
           chmod 600 private_key.pem
 
       - name: Build Template
-        if: steps.changed.outputs.should_build == 'true'
         env:
           PKR_VAR_proxmox_api_url: ${{ secrets.PROXMOX_API_URL }}
           PKR_VAR_proxmox_api_token_id: ${{ secrets.PROXMOX_API_TOKEN_ID }}
@@ -132,13 +144,4 @@ jobs:
 
       - name: Cleanup SSH Key
         if: always()
-        run: rm -f private_key.pem
-
-      - name: Skip Build
-        if: steps.changed.outputs.should_build == 'false'
-        run: |
-          echo "No changes detected in Proxmox/${{ matrix.template }}, skipping build"
-
-      - name: Mark job as success if skipped
-        if: steps.changed.outputs.should_build == 'false'
-        run: exit 0 
+        run: rm -f private_key.pem 
