@@ -174,7 +174,9 @@ build {
         inline = [
             "Write-Host 'Running Sysprep...'",
             "& $env:SystemRoot\\System32\\Sysprep\\Sysprep.exe /oobe /generalize /quit /quiet",
-            "Write-Host 'Sysprep complete. Packer will now shut down the VM.'"
+            "while($true) { $imageState = Get-ItemProperty HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Setup\\State | Select-Object -ExpandProperty ImageState; Write-Host $imageState; if($imageState -eq 'IMAGE_STATE_GENERALIZE_RESEAL_TO_OOBE') { break } Start-Sleep -s 1 }",
+            "Write-Host 'Sysprep complete. Shutting down...'",
+            "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\""
         ]
     }
 }
