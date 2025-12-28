@@ -28,11 +28,16 @@ foreach ($drive in $drives) {
         
         # Install Guest Agent
         Write-Host "Installing QEMU Guest Agent..."
-        Start-Process msiexec.exe -ArgumentList "/i $path\guest-agent\qemu-ga-x86_64.msi /qn" -Wait
+        Start-Process msiexec.exe -ArgumentList "/i `"$path\guest-agent\qemu-ga-x86_64.msi`" /qn /norestart" -Wait
         
-        # Install Drivers (Network, Balloon, SCSI, Serial, etc.)
-        Write-Host "Installing VirtIO Drivers..."
-        pnputil /add-driver "$path\*.inf" /subdirs /install
+        # Install VirtIO Drivers via MSI (The clean way)
+        if (Test-Path "$path\virtio-win-gt-x64.msi") {
+            Write-Host "Installing VirtIO Drivers (MSI)..."
+            Start-Process msiexec.exe -ArgumentList "/i `"$path\virtio-win-gt-x64.msi`" /qn /norestart ADDLOCAL=ALL" -Wait
+        } else {
+            Write-Host "VirtIO MSI not found, falling back to pnputil..."
+            pnputil /add-driver "$path\*.inf" /subdirs /install
+        }
         
         break
     }
