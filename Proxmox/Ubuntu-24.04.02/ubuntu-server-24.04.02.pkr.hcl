@@ -12,6 +12,28 @@ packer {
 }
 
 # Variable Definitions
+variable "vm_name" {
+    type    = string
+    default = "ubuntu-server-24-04-02"
+}
+
+variable "vm_id" {
+    type    = string
+    default = "900"
+}
+
+variable "iso_url" {
+    type    = string
+    default = "https://releases.ubuntu.com/24.04.2/ubuntu-24.04.2-live-server-amd64.iso"
+}
+
+variable "iso_checksum" {
+    type    = string
+    default = "d6dab0c3a657988501b4bd76f1297c053df710e06e0c3aece60dead24f270b4d"
+}
+
+# --- Variable Definitions (Change if necessary) ---
+
 variable "proxmox_api_url" {
     type = string
 }
@@ -30,8 +52,23 @@ variable "ssh_private_key_file" {
     default = "/home/github-runner/.ssh/id_rsa"
 }
 
+variable "proxmox_node" {
+    type    = string
+    default = "pve-srv-01"
+}
+
+variable "proxmox_storage" {
+    type    = string
+    default = "M2-Storage"
+}
+
+variable "cpu_type" {
+    type    = string
+    default = "host"
+}
+
 # Resource Definiation for the VM Template
-source "proxmox-iso" "ubuntu-server-24-04-02" {
+source "proxmox-iso" "ubuntu-server" {
 
     # Proxmox Connection Settings
     proxmox_url = "${var.proxmox_api_url}"
@@ -41,16 +78,16 @@ source "proxmox-iso" "ubuntu-server-24-04-02" {
     insecure_skip_tls_verify = true
     
     # VM General Settings
-    node = "pve-srv-01"
-    vm_id = "900"
-    vm_name = "ubuntu-server-24-04-02"
+    node = "${var.proxmox_node}"
+    vm_id = "${var.vm_id}"
+    vm_name = "${var.vm_name}"
     template_description = "Ubuntu Server Noble Image"
 
     # VM OS Settings
     # ISO Boot Settings
     boot_iso {
-        iso_url = "https://releases.ubuntu.com/24.04.2/ubuntu-24.04.2-live-server-amd64.iso"
-        iso_checksum = "d6dab0c3a657988501b4bd76f1297c053df710e06e0c3aece60dead24f270b4d"
+        iso_url = "${var.iso_url}"
+        iso_checksum = "${var.iso_checksum}"
         iso_storage_pool = "local"
         unmount = true
     }
@@ -64,7 +101,7 @@ source "proxmox-iso" "ubuntu-server-24-04-02" {
     disks {
         disk_size = "32G"
         format = "raw"
-        storage_pool = "M2-Storage"
+        storage_pool = "${var.proxmox_storage}"
         type = "virtio"
     }
 
@@ -72,10 +109,11 @@ source "proxmox-iso" "ubuntu-server-24-04-02" {
     sockets = "1"
 
     # VM CPU Settings
-    cores = "1"
+    cores = "2"
+    cpu_type = "${var.cpu_type}"
     
     # VM Memory Settings
-    memory = "2048" 
+    memory = "4096" 
 
     # VM Network Settings
     network_adapters {
@@ -86,7 +124,7 @@ source "proxmox-iso" "ubuntu-server-24-04-02" {
 
     # VM Cloud-Init Settings
     cloud_init = true
-    cloud_init_storage_pool = "M2-Storage"
+    cloud_init_storage_pool = "${var.proxmox_storage}"
 
     # PACKER Boot Commands
     boot_command = [
@@ -122,8 +160,8 @@ source "proxmox-iso" "ubuntu-server-24-04-02" {
 # Build Definition to create the VM Template
 build {
 
-    name = "ubuntu-server-24-04-02"
-    sources = ["source.proxmox-iso.ubuntu-server-24-04-02"]
+    name = "ubuntu-server"
+    sources = ["source.proxmox-iso.ubuntu-server"]
 
     # Provisioning the VM Template for Cloud-Init Integration in Proxmox #1
     provisioner "shell" {
