@@ -23,20 +23,28 @@ New-NetFirewallRule -DisplayName "Allow WinRM HTTP" -Direction Inbound -LocalPor
 $drives = Get-PSDrive -PSProvider FileSystem
 foreach ($drive in $drives) {
     $path = $drive.Root
-    if (Test-Path "$path\guest-agent\qemu-ga-x86_64.msi") {
+    # Check for the main driver MSI to identify the VirtIO ISO
+    if (Test-Path "$path\virtio-win-gt-x64.msi") {
         Write-Host "Found VirtIO ISO at $path"
         
-        # Install Guest Agent
-        Write-Host "Installing QEMU Guest Agent..."
-        Start-Process msiexec.exe -ArgumentList "/i `"$path\guest-agent\qemu-ga-x86_64.msi`" /qn /norestart" -Wait
+        # Install VirtIO Drivers via MSI
+        Write-Host "Installing VirtIO Drivers (MSI)..."
+        Start-Process msiexec.exe -ArgumentList "/i `"$path\virtio-win-gt-x64.msi`" /qn /norestart ADDLOCAL=ALL" -Wait
         
-        # Install VirtIO Drivers via MSI (The clean way)
-        if (Test-Path "$path\virtio-win-gt-x64.msi") {
-            Write-Host "Installing VirtIO Drivers (MSI)..."
-            Start-Process msiexec.exe -ArgumentList "/i `"$path\virtio-win-gt-x64.msi`" /qn /norestart ADDLOCAL=ALL" -Wait
+        # Install Guest Agent
+        $agentPath = "$path\guest-agent\qemu-ga-x86_64.msi"
+        if (-not (Test-Path $agentPath)) {
+            $agentPath = "$path\guest-agent\qemu-ga-x64.msi"
+        }
+
+        if (Test-Path $agentPath) {
+            Write-Host "Installing QEMU Guest Agent from $agentPath..."
+            Start-Process msiexec.exe -ArgumentList "/i `"$agentPath`" /qn /norestart" -Wait
         } else {
-            Write-Host "VirtIO MSI not found, falling back to pnputil..."
-            pnputil /add-driver "$path\*.inf" /subdirs /install
+            Write-Host "WARNING: QEMU Guest Agent MSI not found on ISO!"
+            if (Test-Path "$path\guest-agent") {
+                Get-ChildItem "$path\guest-agent" | ForEach-Object { Write-Host $_.FullName }
+            }
         }
         
         break
