@@ -85,6 +85,11 @@ source "proxmox-iso" "windows-server" {
     # VM OS Settings
     os = "win11"
     machine = "q35"
+    bios = "ovmf"
+    efi_config {
+        efi_storage_pool = "${var.proxmox_storage}"
+        pre_enrolled_keys = true
+    }
     
     # ISO Boot Settings (Windows Installer)
     boot_iso {

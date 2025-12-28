@@ -31,32 +31,45 @@
             <DiskConfiguration>
                 <Disk wcm:action="add">
                     <CreatePartitions>
+                        <!-- EFI System Partition -->
                         <CreatePartition wcm:action="add">
                             <Order>1</Order>
                             <Size>500</Size>
-                            <Type>Primary</Type>
+                            <Type>EFI</Type>
                         </CreatePartition>
+                        <!-- Microsoft Reserved Partition (MSR) -->
                         <CreatePartition wcm:action="add">
                             <Order>2</Order>
+                            <Size>128</Size>
+                            <Type>MSR</Type>
+                        </CreatePartition>
+                        <!-- Windows Partition -->
+                        <CreatePartition wcm:action="add">
+                            <Order>3</Order>
                             <Extend>true</Extend>
                             <Type>Primary</Type>
                         </CreatePartition>
                     </CreatePartitions>
                     <ModifyPartitions>
+                        <!-- EFI System Partition -->
                         <ModifyPartition wcm:action="add">
-                            <Active>true</Active>
-                            <Format>NTFS</Format>
-                            <Label>System Reserved</Label>
                             <Order>1</Order>
                             <PartitionID>1</PartitionID>
-                            <TypeID>0x27</TypeID>
+                            <Label>System</Label>
+                            <Format>FAT32</Format>
                         </ModifyPartition>
+                        <!-- MSR Partition (no modification needed) -->
                         <ModifyPartition wcm:action="add">
-                            <Format>NTFS</Format>
-                            <Label>Windows</Label>
-                            <Letter>C</Letter>
                             <Order>2</Order>
                             <PartitionID>2</PartitionID>
+                        </ModifyPartition>
+                        <!-- Windows Partition -->
+                        <ModifyPartition wcm:action="add">
+                            <Order>3</Order>
+                            <PartitionID>3</PartitionID>
+                            <Label>Windows</Label>
+                            <Letter>C</Letter>
+                            <Format>NTFS</Format>
                         </ModifyPartition>
                     </ModifyPartitions>
                     <DiskID>0</DiskID>
@@ -73,7 +86,7 @@
                     </InstallFrom>
                     <InstallTo>
                         <DiskID>0</DiskID>
-                        <PartitionID>2</PartitionID>
+                        <PartitionID>3</PartitionID>
                     </InstallTo>
                 </OSImage>
             </ImageInstall>
