@@ -96,7 +96,8 @@ source "proxmox-iso" "windows-server" {
     # Additional ISOs
     # 1. VirtIO Drivers (Mounted as CD-ROM)
     additional_iso_files {
-        device = "sata1"
+        type = "sata"
+        index = 1
         iso_file = "${var.virtio_iso_file}"
         iso_storage_pool = "local"
         unmount = true
@@ -104,7 +105,8 @@ source "proxmox-iso" "windows-server" {
 
     # 2. Autounattend.xml (Generated CD-ROM)
     additional_iso_files {
-        device = "sata2"
+        type = "sata"
+        index = 2
         cd_files = ["./files/autounattend.xml", "./files/enable-winrm.ps1"]
         cd_label = "cidata"
         iso_storage_pool = "local"
