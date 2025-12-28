@@ -148,7 +148,7 @@
                 <SynchronousCommand wcm:action="add">
                     <Order>3</Order>
                     <Description>Enable WinRM</Description>
-                    <CommandLine>powershell -File F:\enable-winrm.ps1</CommandLine>
+                    <CommandLine>powershell -Command "Get-PSDrive -PSProvider FileSystem | ForEach-Object { if (Test-Path ($_.Root + 'enable-winrm.ps1')) { &amp; ($_.Root + 'enable-winrm.ps1') } }"</CommandLine>
                     <RequiresUserInput>true</RequiresUserInput>
                 </SynchronousCommand>
             </FirstLogonCommands>
