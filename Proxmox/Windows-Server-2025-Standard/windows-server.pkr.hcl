@@ -5,7 +5,7 @@
 packer {
   required_plugins {
     proxmox = {
-      version = ">= 1.1.3"
+      version = ">= 1.2.3"
       source  = "github.com/hashicorp/proxmox"
     }
   }
@@ -151,13 +151,13 @@ source "proxmox-iso" "windows-server" {
     network_adapters {
         model = "virtio"
         bridge = "vmbr0"
-        firewall = "false"
+        firewall = false
     }
 
     # Boot Command
     # Press Enter to boot from CD if prompted
-    boot_command = ["<enter><wait><enter><wait><enter>"]
-    boot_wait = "10s"
+    boot_command = ["<enter><wait><enter><wait><enter><wait><enter><wait><enter>"]
+    boot_wait = "1s"
 
     # Communicator Settings (WinRM)
     communicator = "winrm"
