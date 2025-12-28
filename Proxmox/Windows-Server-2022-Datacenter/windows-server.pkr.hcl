@@ -123,7 +123,7 @@ source "proxmox-iso" "windows-server" {
         disk_size = "60G"
         format = "raw"
         storage_pool = "${var.proxmox_storage}"
-        type = "virtio"
+        type = "scsi"
     }
 
     # VM CPU Settings
