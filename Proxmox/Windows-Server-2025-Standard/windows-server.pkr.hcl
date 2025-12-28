@@ -90,6 +90,10 @@ source "proxmox-iso" "windows-server" {
         efi_storage_pool = "${var.proxmox_storage}"
         pre_enrolled_keys = true
     }
+    tpm_config {
+        tpm_storage_pool = "${var.proxmox_storage}"
+        tpm_version = "v2.0"
+    }
     
     # ISO Boot Settings (Windows Installer)
     boot_iso {
@@ -123,7 +127,7 @@ source "proxmox-iso" "windows-server" {
     qemu_agent = true
     
     # VM Hard Disk Settings
-    scsi_controller = "virtio-scsi-single"
+    scsi_controller = "virtio-scsi-pci"
     
     disks {
         disk_size = "32G"
@@ -132,13 +136,13 @@ source "proxmox-iso" "windows-server" {
         type = "scsi"
         cache_mode = "writeback"
         discard = true
-        io_thread = true
+        io_thread = false
     }
 
     # VM CPU Settings
     sockets = "1"
     cores = "2"
-    cpu_type = "${var.cpu_type}"
+    cpu_type = "x86-64-v2-AES"
     
     # VM Memory Settings
     memory = "4096"
