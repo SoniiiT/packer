@@ -154,6 +154,10 @@ source "proxmox-iso" "windows-server" {
     winrm_use_ssl = false
     winrm_insecure = true
     winrm_timeout = "1h"
+
+    # Shutdown Settings
+    shutdown_command = "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\""
+    shutdown_timeout = "15m"
 }
 
 # Build Definition
