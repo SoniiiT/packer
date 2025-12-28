@@ -118,13 +118,16 @@ source "proxmox-iso" "windows-server" {
     qemu_agent = true
     
     # VM Hard Disk Settings
-    scsi_controller = "virtio-scsi-pci"
+    scsi_controller = "virtio-scsi-single"
     
     disks {
         disk_size = "32G"
         format = "raw"
         storage_pool = "${var.proxmox_storage}"
         type = "scsi"
+        cache_mode = "writeback"
+        discard = true
+        io_thread = true
     }
 
     # VM CPU Settings
