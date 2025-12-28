@@ -121,7 +121,7 @@ source "proxmox-iso" "windows-server" {
     scsi_controller = "virtio-scsi-pci"
     
     disks {
-        disk_size = "60G"
+        disk_size = "32G"
         format = "raw"
         storage_pool = "${var.proxmox_storage}"
         type = "scsi"
@@ -129,7 +129,7 @@ source "proxmox-iso" "windows-server" {
 
     # VM CPU Settings
     sockets = "1"
-    cores = "4"
+    cores = "2"
     cpu_type = "${var.cpu_type}"
     
     # VM Memory Settings
@@ -167,6 +167,19 @@ build {
             "Write-Host 'Installation Complete'",
             "Get-WmiObject Win32_OperatingSystem | Select-Object Caption, Version"
         ]
+    }
+
+    # Provisioner: Convert Eval to Retail (Datacenter)
+    provisioner "powershell" {
+        inline = [
+            "Write-Host 'Converting Windows Server Evaluation to Retail (Datacenter)...'",
+            "dism /online /set-edition:ServerDatacenter /productkey:WX4NM-KYWYW-QJJR4-XV3QB-6VM33 /accepteula"
+        ]
+    }
+
+    # Provisioner: Restart after Edition Change
+    provisioner "windows-restart" {
+        restart_timeout = "30m"
     }
 
     # Provisioner: Sysprep and Shutdown
