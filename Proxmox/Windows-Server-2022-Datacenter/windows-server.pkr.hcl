@@ -42,7 +42,7 @@ variable "vm_id" {
 
 variable "vm_name" {
     type    = string
-    default = "windows-server-2022"
+    default = "windows-server-2022-datacenter"
 }
 
 variable "cpu_type" {
