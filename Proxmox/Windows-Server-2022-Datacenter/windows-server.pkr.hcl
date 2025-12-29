@@ -173,8 +173,9 @@ build {
     provisioner "powershell" {
         inline = [
             "Write-Host 'Converting Windows Server Evaluation to Retail (Datacenter)...'",
-            "dism /online /set-edition:ServerDatacenter /productkey:WX4NM-KYWYW-QJJR4-XV3QB-6VM33 /accepteula"
+            "dism /online /set-edition:ServerDatacenter /productkey:WX4NM-KYWYW-QJJR4-XV3QB-6VM33 /accepteula /NoRestart"
         ]
+        valid_exit_codes = [0, 3010]
     }
 
     # Provisioner: Restart after Edition Change

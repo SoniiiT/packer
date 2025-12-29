@@ -173,8 +173,9 @@ build {
     provisioner "powershell" {
         inline = [
             "Write-Host 'Converting Windows Server Evaluation to Retail (Standard)...'",
-            "dism /online /set-edition:ServerStandard /productkey:VDYBN-27WPP-V4HQT-9VMD4-VMK7H /accepteula"
+            "dism /online /set-edition:ServerStandard /productkey:VDYBN-27WPP-V4HQT-9VMD4-VMK7H /accepteula /NoRestart"
         ]
+        valid_exit_codes = [0, 3010]
     }
 
     # Provisioner: Restart after Edition Change
