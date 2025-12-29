@@ -187,6 +187,7 @@ build {
             "Write-Host 'Converting Windows Server Evaluation to Retail (Standard)...'",
             "dism /online /set-edition:ServerStandard /productkey:TVRH6-WHNXV-R9WG3-9XRFY-MY832 /accepteula /NoRestart"
         ]
+        valid_exit_codes = [0, 3010]
     }
 
     # Provisioner: Restart after Edition Change

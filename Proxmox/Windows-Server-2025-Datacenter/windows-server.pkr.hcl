@@ -187,6 +187,7 @@ build {
             "Write-Host 'Converting Windows Server Evaluation to Retail (Datacenter)...'",
             "dism /online /set-edition:ServerDatacenter /productkey:D764K-2NDRG-47T6Q-P8T8W-YP6DF /accepteula /NoRestart"
         ]
+        valid_exit_codes = [0, 3010]
     }
 
     # Provisioner: Restart after Edition Change
