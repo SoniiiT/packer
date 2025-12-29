@@ -185,7 +185,7 @@ build {
     provisioner "powershell" {
         inline = [
             "Write-Host 'Converting Windows Server Evaluation to Retail (Standard)...'",
-            "dism /online /set-edition:ServerStandard /productkey:TVRH6-WHNXV-R9WG3-9XRFY-MY832 /accepteula"
+            "dism /online /set-edition:ServerStandard /productkey:TVRH6-WHNXV-R9WG3-9XRFY-MY832 /accepteula /NoRestart"
         ]
     }
 

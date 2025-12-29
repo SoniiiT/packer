@@ -185,7 +185,7 @@ build {
     provisioner "powershell" {
         inline = [
             "Write-Host 'Converting Windows Server Evaluation to Retail (Datacenter)...'",
-            "dism /online /set-edition:ServerDatacenter /productkey:D764K-2NDRG-47T6Q-P8T8W-YP6DF /accepteula"
+            "dism /online /set-edition:ServerDatacenter /productkey:D764K-2NDRG-47T6Q-P8T8W-YP6DF /accepteula /NoRestart"
         ]
     }
 
