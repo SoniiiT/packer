@@ -1,0 +1,244 @@
+{
+  "version": 1,
+  "meta": {
+    "lastScanned": "2026-09-21T16:32:36.894Z",
+    "fileCount": 25,
+    "hits": 0,
+    "misses": 0,
+    "renderedHash": "1917692bc2dee48d2171c2b69886699db109bc630fb5a6f45635b9df6ce75409",
+    "storeUpdatedAt": "2026-09-21T16:32:36.895Z",
+    "rootHash": "083923350780bfb7"
+  },
+  "files": {
+    ".github/workflows/packer-proxmox.yml": {
+      "description": "CI: Packer Build on Proxmox",
+      "tokens": 1318,
+      "hash": "750d33d776c88781",
+      "size": 4610,
+      "mtimeMs": 1787554063207.5361,
+      "updatedAt": "2026-09-21T16:32:36.865Z",
+      "source": "scan"
+    },
+    ".gitignore": {
+      "description": "Git ignore rules",
+      "tokens": 41,
+      "hash": "9ca2a253192efbce",
+      "size": 151,
+      "mtimeMs": 1787554063207.622,
+      "updatedAt": "2026-09-21T16:32:36.865Z",
+      "source": "scan"
+    },
+    "AGENTS.md": {
+      "description": "OpenWolf",
+      "tokens": 75,
+      "hash": "e401f79554a8d796",
+      "size": 297,
+      "mtimeMs": 1790008356841.2554,
+      "updatedAt": "2026-09-21T16:32:36.865Z",
+      "source": "scan"
+    },
+    "CLAUDE.md": {
+      "description": "OpenWolf",
+      "tokens": 99,
+      "hash": "074d6b42b583729a",
+      "size": 395,
+      "mtimeMs": 1790008356835.6162,
+      "updatedAt": "2026-09-21T16:32:36.865Z",
+      "source": "scan"
+    },
+    "Proxmox/Ubuntu-24.04.02/files/99-pve.cfg": {
+      "description": "",
+      "tokens": 11,
+      "hash": "a03295793951ef51",
+      "size": 39,
+      "mtimeMs": 1787554063207.8623,
+      "updatedAt": "2026-09-21T16:32:36.867Z",
+      "source": "scan"
+    },
+    "Proxmox/Ubuntu-24.04.02/http/meta-data": {
+      "description": "",
+      "tokens": 0,
+      "hash": "e3b0c44298fc1c14",
+      "size": 0,
+      "mtimeMs": 1787554063207.9773,
+      "updatedAt": "2026-09-21T16:32:36.868Z",
+      "source": "scan"
+    },
+    "Proxmox/Ubuntu-24.04.02/http/user-data": {
+      "description": "cloud-config",
+      "tokens": 356,
+      "hash": "0973ff422dde56a0",
+      "size": 1332,
+      "mtimeMs": 1787554063208.103,
+      "updatedAt": "2026-09-21T16:32:36.869Z",
+      "source": "scan"
+    },
+    "Proxmox/Ubuntu-24.04.02/ubuntu-server-24.04.02.pkr.hcl": {
+      "description": "Ubuntu Server jammy",
+      "tokens": 1237,
+      "hash": "a0088833d22899da",
+      "size": 4637,
+      "mtimeMs": 1787554063208.2732,
+      "updatedAt": "2026-09-21T16:32:36.870Z",
+      "source": "scan"
+    },
+    "Proxmox/Ubuntu-24.04.03/files/99-pve.cfg": {
+      "description": "",
+      "tokens": 11,
+      "hash": "a03295793951ef51",
+      "size": 39,
+      "mtimeMs": 1787554063208.478,
+      "updatedAt": "2026-09-21T16:32:36.871Z",
+      "source": "scan"
+    },
+    "Proxmox/Ubuntu-24.04.03/http/meta-data": {
+      "description": "",
+      "tokens": 0,
+      "hash": "e3b0c44298fc1c14",
+      "size": 0,
+      "mtimeMs": 1787554063208.5825,
+      "updatedAt": "2026-09-21T16:32:36.871Z",
+      "source": "scan"
+    },
+    "Proxmox/Ubuntu-24.04.03/http/user-data": {
+      "description": "cloud-config",
+      "tokens": 356,
+      "hash": "0973ff422dde56a0",
+      "size": 1332,
+      "mtimeMs": 1787554063208.6711,
+      "updatedAt": "2026-09-21T16:32:36.872Z",
+      "source": "scan"
+    },
+    "Proxmox/Ubuntu-24.04.03/ubuntu-server-24.04.02.pkr.hcl": {
+      "description": "Ubuntu Server jammy",
+      "tokens": 1237,
+      "hash": "be3e5cc01631000d",
+      "size": 4637,
+      "mtimeMs": 1787554063208.7769,
+      "updatedAt": "2026-09-21T16:32:36.873Z",
+      "source": "scan"
+    },
+    "Proxmox/Windows-Server-2022-Datacenter/files/autounattend.xml": {
+      "description": "",
+      "tokens": 2678,
+      "hash": "ad99f8589769c295",
+      "size": 9370,
+      "mtimeMs": 1787554063209.0215,
+      "updatedAt": "2026-09-21T16:32:36.874Z",
+      "source": "scan"
+    },
+    "Proxmox/Windows-Server-2022-Datacenter/files/enable-winrm.ps1": {
+      "description": "Enable WinRM for Packer",
+      "tokens": 606,
+      "hash": "b2ec1f481ce675f3",
+      "size": 2271,
+      "mtimeMs": 1787554063209.1204,
+      "updatedAt": "2026-09-21T16:32:36.875Z",
+      "source": "scan"
+    },
+    "Proxmox/Windows-Server-2022-Datacenter/windows-server.pkr.hcl": {
+      "description": "Windows Server 2022 Datacenter",
+      "tokens": 1345,
+      "hash": "f4c847b31b623444",
+      "size": 5043,
+      "mtimeMs": 1787554063209.243,
+      "updatedAt": "2026-09-21T16:32:36.876Z",
+      "source": "scan"
+    },
+    "Proxmox/Windows-Server-2022-Standard/files/autounattend.xml": {
+      "description": "",
+      "tokens": 2678,
+      "hash": "068d5ed1b9c028aa",
+      "size": 9370,
+      "mtimeMs": 1787554063209.4885,
+      "updatedAt": "2026-09-21T16:32:36.877Z",
+      "source": "scan"
+    },
+    "Proxmox/Windows-Server-2022-Standard/files/enable-winrm.ps1": {
+      "description": "Enable WinRM for Packer",
+      "tokens": 606,
+      "hash": "b2ec1f481ce675f3",
+      "size": 2271,
+      "mtimeMs": 1787554063209.5974,
+      "updatedAt": "2026-09-21T16:32:36.878Z",
+      "source": "scan"
+    },
+    "Proxmox/Windows-Server-2022-Standard/windows-server.pkr.hcl": {
+      "description": "Windows Server 2022 Standard",
+      "tokens": 1342,
+      "hash": "140ae2ca5fa354c0",
+      "size": 5031,
+      "mtimeMs": 1787554063209.6982,
+      "updatedAt": "2026-09-21T16:32:36.879Z",
+      "source": "scan"
+    },
+    "Proxmox/Windows-Server-2025-Datacenter/files/autounattend.xml": {
+      "description": "",
+      "tokens": 3156,
+      "hash": "6642b6a157fd339a",
+      "size": 11044,
+      "mtimeMs": 1787554063209.9133,
+      "updatedAt": "2026-09-21T16:32:36.880Z",
+      "source": "scan"
+    },
+    "Proxmox/Windows-Server-2025-Datacenter/files/enable-winrm.ps1": {
+      "description": "Enable WinRM for Packer",
+      "tokens": 606,
+      "hash": "b2ec1f481ce675f3",
+      "size": 2271,
+      "mtimeMs": 1787554063209.9983,
+      "updatedAt": "2026-09-21T16:32:36.881Z",
+      "source": "scan"
+    },
+    "Proxmox/Windows-Server-2025-Datacenter/windows-server.pkr.hcl": {
+      "description": "Windows Server 2025 Datacenter",
+      "tokens": 1434,
+      "hash": "63a6f4fed4764cf8",
+      "size": 5374,
+      "mtimeMs": 1787554063210.0837,
+      "updatedAt": "2026-09-21T16:32:36.882Z",
+      "source": "scan"
+    },
+    "Proxmox/Windows-Server-2025-Standard/files/autounattend.xml": {
+      "description": "",
+      "tokens": 3156,
+      "hash": "8b778c780c895ff1",
+      "size": 11044,
+      "mtimeMs": 1787554063210.2651,
+      "updatedAt": "2026-09-21T16:32:36.883Z",
+      "source": "scan"
+    },
+    "Proxmox/Windows-Server-2025-Standard/files/enable-winrm.ps1": {
+      "description": "Enable WinRM for Packer",
+      "tokens": 606,
+      "hash": "b2ec1f481ce675f3",
+      "size": 2271,
+      "mtimeMs": 1787554063210.3494,
+      "updatedAt": "2026-09-21T16:32:36.884Z",
+      "source": "scan"
+    },
+    "Proxmox/Windows-Server-2025-Standard/windows-server.pkr.hcl": {
+      "description": "Windows Server 2025 Standard",
+      "tokens": 1430,
+      "hash": "9db861906432c24d",
+      "size": 5362,
+      "mtimeMs": 1787554063210.4397,
+      "updatedAt": "2026-09-21T16:32:36.885Z",
+      "source": "scan"
+    },
+    "README.md": {
+      "description": "Project documentation",
+      "tokens": 750,
+      "hash": "535741d5cc63e0dc",
+      "size": 3069,
+      "mtimeMs": 1787554063210.5344,
+      "updatedAt": "2026-09-21T16:32:36.885Z",
+      "source": "scan"
+    }
+  },
+  "preamble": [
+    "> Project structure index. Auto-maintained by OpenWolf hooks and daemon.",
+    "> Run `openwolf scan` to generate, or wait for the first Claude Code session.",
+    "> Status: Pending initial scan"
+  ]
+}
